@@ -1,89 +1,145 @@
-'use client'; // Директива для клиентского рендера
+'use client';
 
-import { useMemo, useCallback, useReducer, useRef } from 'react';
+const HeartIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+  </svg>
+);
 
-export default function Footer() {
-  const footerRef = useRef(null); // useRef: реф на футер (для скролла, если нужно)
+const CommentIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd" />
+  </svg>
+);
 
-  const initialState = { news: false, contributors: false, readership: false };
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case 'TOGGLE':
-        return { ...state, [action.key]: !state[action.key] };
-      default:
-        return state;
-    }
-  };
-  const [state, dispatch] = useReducer(reducer, initialState); // useReducer: состояние колонок
+const ArrowIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+  </svg>
+);
 
-  // useMemo: мемоизация данных колонок (симулируем дорогое вычисление)
-  const columns = useMemo(() => [
-    {
-      key: 'news',
-      icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15.5V11h2v6.5h-2zm-1-7h2V7h-2v1.5z',
-      title: 'Latest News Updates',
-      subtitle: 'Stay Current',
-      desc: 'Over 1,000 articles published monthly',
-      extra: 'Подробнее: Ежемесячно обновляемся новыми трендами в AI.'
-    },
-    {
-      key: 'contributors',
-      icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2.5 13.5v-3H9v-2h1.5v-2H13v2h-1.5v3h-2zm5.5-2.5v-3H16v-2h-1.5v-2H18v2h-1.5v3h-2z',
-      title: 'Expert Contributors',
-      subtitle: 'Trusted Insights',
-      desc: '50+ renowned AI experts on our team',
-      extra: 'Подробнее: От PhD до CEO — наши авторы делятся эксклюзивом.'
-    },
-    {
-      key: 'readership',
-      icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-4 13h4v2h-4v-2zm-2-4h8v2h-8v-2zm-2-4h12v2h-12v-2z',
-      title: 'Global Readership',
-      subtitle: 'Worldwide impact',
-      desc: '2 million monthly readers',
-      extra: 'Подробнее: Читатели из 150+ стран, переводы на 5 языков.'
-    }
-  ], []); // Пустые deps — разовый расчёт
+export default function Main() {
+    // Данные для карточек
+    const mainArticle = {
+        imageUrl: 'https://images.unsplash.com/photo-1505142197621-187b3a79a6b1?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1600',
+        category: 'Environment',
+        date: 'October 10, 2023',
+        author: 'Jane Smith',
+        title: 'Global Climate Summit Addresses Urgent Climate Action',
+        description: 'World leaders gathered at the Global Climate Summit to discuss urgent climate action, emissions reductions, and renewable energy targets.',
+        likes: '14k',
+        comments: '204',
+    };
 
-  // useCallback: мемоизация обработчика
-  const handleExpand = useCallback((key) => {
-    dispatch({ type: 'TOGGLE', key });
-  }, [dispatch]);
+    const secondaryArticles = [
+        {
+            id: 1,
+            imageUrl: 'https://images.unsplash.com/photo-1583327497992-3c3a9d08e58a?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=800',
+            title: 'A Decisive Victory for Progressive Policies',
+            category: 'Politics',
+            likes: '2.2k',
+            comments: '60',
+        },
+        {
+            id: 2,
+            imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=800',
+            title: 'Tech Giants Unveil Cutting-Edge AI Innovations',
+            category: 'Technology',
+            likes: '6k',
+            comments: '92',
+        },
+        {
+            id: 3,
+            imageUrl: 'https://images.unsplash.com/photo-1618961734760-466979ce35b0?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=800',
+            title: 'COVID-19 Variants',
+            category: 'Health',
+            likes: '10k',
+            comments: '124',
+        },
+    ];
+    
+    return (
+        <div className="bg-[#121212] min-h-screen pt-12 pb-20">
+            {/* Headlines Section */}
+            <section className="bg-black text-white w-full">
+                <div className="container mx-auto px-6 py-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8 items-center">
+                        <div className="text-center lg:text-left">
+                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-snug text-yellow-400">
+                                Today's Headlines: Stay Informed
+                            </h1>
+                        </div>
+                        <div className="text-center lg:text-left">
+                            <p className="text-base sm:text-lg text-gray-400 max-w-md mx-auto lg:mx-0">
+                                Explore the latest news from around the world. We bring you up-to-the-minute updates on the most significant events, trends, and stories.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-  return (
-    <section ref={footerRef} className="bg-neutral-950 text-white py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-start space-y-8 md:space-y-0 md:space-x-8">
-          {columns.map((col) => (
-            <div key={col.key} className="flex flex-col items-start text-left w-full overflow-hidden">
-              <div className="p-2 sm:p-3 bg-yellow-500 rounded-full mb-4">
-                <svg className="w-8 h-8 sm:w-10 sm:h-10 text-black" fill="currentColor" viewBox="0 0 24 24">
-                  <path d={col.icon} />
-                </svg>
-              </div>
-              <div className="flex items-center justify-between w-full mb-2">
-                <h3 className="text-xl sm:text-2xl font-semibold leading-tight">{col.title}</h3>
-                <button 
-                  onClick={() => handleExpand(col.key)}
-                  className="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500 hover:bg-yellow-400 transition-colors duration-200"
-                >
-                  <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
-              <p className="text-sm text-gray-400 mb-2 leading-tight">{col.subtitle}</p>
-              <p className="text-sm sm:text-base text-gray-300 mb-4">{col.desc}</p>
-              <div 
-                className={`text-sm text-gray-400 transition-all duration-300 ease-in-out overflow-hidden ${
-                  state[col.key] ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
-                }`}
-              >
-                {col.extra}
-              </div>
+            {/* News Grid Section */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+                
+                {/* --- Основная статья --- */}
+                <section className="bg-[#1a1a1a] rounded-2xl shadow-xl p-4 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10 items-center border border-neutral-700/50">
+                    {/* Изображение */}
+                    <div className="rounded-xl overflow-hidden shadow-lg transform transition duration-500 hover:scale-[1.02]">
+                        <img src={mainArticle.imageUrl} alt={mainArticle.title} className="w-full h-full object-cover aspect-[16/9]" />
+                    </div>
+
+                    {/* Контент */}
+                    <div className="flex flex-col h-full">
+                        <span className="text-xs font-semibold uppercase tracking-widest text-yellow-400 mb-2">{mainArticle.category}</span>
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">{mainArticle.title}</h2>
+                        <p className="text-gray-400 text-base md:text-lg mb-6">{mainArticle.description}</p>
+                        
+                        <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500 mb-6 border-t border-b border-neutral-800 py-3">
+                            <div>{mainArticle.date}</div>
+                            <div>By <span className="text-white font-medium">{mainArticle.author}</span></div>
+                        </div>
+
+                        <div className="mt-auto flex justify-between items-center">
+                            <div className="flex items-center gap-4 text-gray-400">
+                                <div className="flex items-center gap-1.5"><HeartIcon /> {mainArticle.likes}</div>
+                                <div className="flex items-center gap-1.5"><CommentIcon /> {mainArticle.comments}</div>
+                            </div>
+                            <a href="#" className="flex items-center gap-2 bg-yellow-500 text-black px-5 py-2 rounded-full text-sm font-semibold hover:bg-yellow-400 transition-colors">
+                                Read Article <ArrowIcon />
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                {/* --- Второстепенные статьи --- */}
+                <section className="mt-16">
+                    <h2 className="text-3xl font-bold text-white mb-8 border-b border-neutral-800 pb-4">Trending Stories</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {secondaryArticles.map((article) => (
+                            <div key={article.id} className="bg-[#1a1a1a] rounded-xl overflow-hidden flex flex-col group shadow-lg hover:shadow-yellow-500/10 transition-shadow duration-300">
+                                <div className="relative aspect-[4/3] overflow-hidden">
+                                    <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                </div>
+                                <div className="p-6 flex flex-col flex-grow">
+                                    <p className="text-xs font-semibold uppercase tracking-widest text-yellow-400 mb-2">{article.category}</p>
+                                    <h3 className="font-bold text-xl mb-3 leading-snug group-hover:text-yellow-400 transition">{article.title}</h3>
+                                    
+                                    <div className="mt-auto pt-4 border-t border-neutral-800 flex justify-between items-center">
+                                        <div className="flex items-center gap-4 text-gray-500 text-sm">
+                                            <div className="flex items-center gap-1"><HeartIcon /> {article.likes}</div>
+                                            <div className="flex items-center gap-1"><CommentIcon /> {article.comments}</div>
+                                        </div>
+                                        <a href="#" className="flex items-center gap-1 text-sm text-yellow-400 hover:text-white transition-colors">
+                                            Go <ArrowIcon />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
             </div>
-          ))}
         </div>
-      </div>
-    </section>
-  );
+    );
 }
